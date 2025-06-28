@@ -1,15 +1,16 @@
 import sqlite3
 from typing import Any
+from contextlib import contextmanager
 
 from app.schemas import ShipmentCreate, ShipmentUpdate
 
 
 class Database:
-    def __init__(self):
-        # Make the connection
+
+    def connect_to_db(self):
         self.conn = sqlite3.connect("sqlite.db", check_same_thread=False)
         self.cur = self.conn.cursor()
-        self.create_table()
+        print("connected to sqlite.db ...")
 
     # Create table if not exists
     def create_table(self):
@@ -88,4 +89,35 @@ class Database:
         self.conn.commit()
 
     def close(self):
+        print("...connection closed")
         self.conn.close()
+
+    # def __enter__(self):
+    #     print("enter the context")
+    #     self.connect_to_db()
+    #     self.create_table()
+    #     return self
+
+    # def __exit__(self, *arg):
+    #     print("exiting the context")
+    #     self.close()
+
+
+# Usage
+@contextmanager
+def managed_db():
+    db = Database()
+    # Setup
+    print("enter setup")
+    db.connect_to_db()
+    db.create_table()
+
+    yield db
+
+    print("exit the context")
+    # Dispose
+    db.close()
+
+
+with managed_db() as db:
+    print(db.get(12701))
