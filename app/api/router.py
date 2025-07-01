@@ -1,16 +1,15 @@
 from datetime import datetime, timedelta
-from typing import Any
 from fastapi import APIRouter, HTTPException, status
 
 from app.database.models import ShipmentStatus
 from app.database.session import SessionDep
-from app.schemas import Shipment, ShipmentCreate, ShipmentUpdate
+from app.api.schemas.shipment import Shipment, ShipmentCreate, ShipmentUpdate
 
 router = APIRouter()
 
+
 @router.get("/shipment", response_model=Shipment)  # shipment = remessa
 async def get_shipment(id: int, session: SessionDep):
-
     shipment = await session.get(Shipment, id)
     if shipment is None:
         raise HTTPException(
@@ -20,21 +19,21 @@ async def get_shipment(id: int, session: SessionDep):
 
 
 @router.post("/shipment", response_model=None)
-def submit_shipment(shipment: ShipmentCreate, session: SessionDep) -> dict[str, Any]:
+async def submit_shipment(shipment: ShipmentCreate, session: SessionDep) -> dict[str, int]:
     new_shipment = Shipment(
         **shipment.model_dump(),
         status=ShipmentStatus.placed,
         estimated_delivery=datetime.now() + timedelta(days=3),
     )
     session.add(new_shipment)
-    session.commit()
-    session.refresh(new_shipment)
+    await session.commit()
+    await session.refresh(new_shipment)
 
     return {"id": new_shipment.id}
 
 
 @router.patch("/shipment", response_model=Shipment)
-def update_shipment(id: int, shipment_update: ShipmentUpdate, session: SessionDep):
+async def update_shipment(id: int, shipment_update: ShipmentUpdate, session: SessionDep):
     # converte em dicionario e tirar os nulos
     update = shipment_update.model_dump(exclude_none=True)
 
@@ -43,23 +42,20 @@ def update_shipment(id: int, shipment_update: ShipmentUpdate, session: SessionDe
             status_code=status.HTTP_400_BAD_REQUEST, detail="No data provided to update"
         )
 
-    shipment = session.get(Shipment, id)
+    shipment = await session.get(Shipment, id)
     shipment.sqlmodel_update(update)  # type:ignore
 
     session.add(shipment)
-    session.commit()
-    session.refresh(shipment)
+    await session.commit()
+    await session.refresh(shipment)
 
     return shipment
 
 
 @router.delete("/shipment")
-def delete_shipment(id: int, session: SessionDep) -> dict[str, str]:
+async def delete_shipment(id: int, session: SessionDep) -> dict[str, str]:
+    await session.delete(await session.get(Shipment, id))
 
-    session.delete(session.get(Shipment, id))
-
-    session.commit()
+    await session.commit()
 
     return {"detail": f"Shipment with id #{id} is deleted!"}
-
-
