@@ -1,35 +1,30 @@
-from enum import Enum
-
+from datetime import datetime
 from random import randint
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from sqlmodel import SQLModel, Field
+from app.database.models import ShipmentStatus
 
 
 def random_destination():
     return randint(11000, 11999)
 
 
-class ShipmentStatus(str, Enum):
-    placed = "placed"
-    in_transit = "in_transit"
-    out_for_delivery = "out_for_delivery"
-    delivered = "delivered"
-
-
-class BaseShipment(BaseModel): 
+class BaseShipment(SQLModel):
     content: str
     weight: float = Field(le=25)
-    # destination: int
+    destination: int
 
-class ShipmentRead(BaseShipment):
+
+class Shipment(BaseShipment, table=True):
+    id: int = Field(default=None, primary_key=True)
     status: ShipmentStatus
-    
+    estimated_delivery: datetime
+
 
 class ShipmentCreate(BaseShipment):
     pass
-    
+
 
 class ShipmentUpdate(BaseModel):
-    content: str | None = Field(default=None)
-    weight: float | None = Field(default=0, le=25)
-    # destination: int | None = Field(default=0)
-    status: ShipmentStatus
+    status: ShipmentStatus | None = Field(default=None)
+    estimated_delivery: datetime | None = Field(default=None)
