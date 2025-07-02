@@ -1,16 +1,16 @@
-from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException, status
 
-from app.database.models import ShipmentStatus
-from app.database.session import SessionDep
-from app.api.schemas.shipment import Shipment, ShipmentCreate, ShipmentUpdate
+from app.api.dependencies import ServiceDep
+from app.api.schemas.shipment import ShipmentCreate, ShipmentUpdate
+from app.database.models import Shipment
 
 router = APIRouter()
 
 
 @router.get("/shipment", response_model=Shipment)  # shipment = remessa
-async def get_shipment(id: int, session: SessionDep):
-    shipment = await session.get(Shipment, id)
+async def get_shipment(id: int, service: ServiceDep):
+    shipment = await service.get(id)
+
     if shipment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Given id doesn't exist!!"
@@ -18,22 +18,13 @@ async def get_shipment(id: int, session: SessionDep):
     return shipment
 
 
-@router.post("/shipment", response_model=None)
-async def submit_shipment(shipment: ShipmentCreate, session: SessionDep) -> dict[str, int]:
-    new_shipment = Shipment(
-        **shipment.model_dump(),
-        status=ShipmentStatus.placed,
-        estimated_delivery=datetime.now() + timedelta(days=3),
-    )
-    session.add(new_shipment)
-    await session.commit()
-    await session.refresh(new_shipment)
-
-    return {"id": new_shipment.id}
+@router.post("/shipment")
+async def submit_shipment(shipment: ShipmentCreate, service: ServiceDep) -> Shipment:
+    return await service.add(shipment)
 
 
 @router.patch("/shipment", response_model=Shipment)
-async def update_shipment(id: int, shipment_update: ShipmentUpdate, session: SessionDep):
+async def update_shipment(id: int, shipment_update: ShipmentUpdate, service: ServiceDep):
     # converte em dicionario e tirar os nulos
     update = shipment_update.model_dump(exclude_none=True)
 
@@ -42,20 +33,11 @@ async def update_shipment(id: int, shipment_update: ShipmentUpdate, session: Ses
             status_code=status.HTTP_400_BAD_REQUEST, detail="No data provided to update"
         )
 
-    shipment = await session.get(Shipment, id)
-    shipment.sqlmodel_update(update)  # type:ignore
-
-    session.add(shipment)
-    await session.commit()
-    await session.refresh(shipment)
-
+    shipment = await service.update(id, update)
     return shipment
 
 
 @router.delete("/shipment")
-async def delete_shipment(id: int, session: SessionDep) -> dict[str, str]:
-    await session.delete(await session.get(Shipment, id))
-
-    await session.commit()
-
+async def delete_shipment(id: int, service: ServiceDep) -> dict[str, str]:
+    await service.delete(id)
     return {"detail": f"Shipment with id #{id} is deleted!"}
