@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 
-from app.api.dependencies import ShipmentServiceDep
+from app.api.dependencies import ShipmentServiceDep, SellerDep
 from app.api.schemas.shipment import ShipmentCreate, ShipmentUpdate
 from app.database.models import Shipment
 
@@ -13,6 +13,7 @@ router = APIRouter(
 @router.get("/", response_model=Shipment)  # shipment = remessa
 async def get_shipment(
     id: int,
+    _: SellerDep, # O valor _ indica que nao será utilizado no metodo.
     service: ShipmentServiceDep,
 ):
     shipment = await service.get(id)
@@ -26,6 +27,7 @@ async def get_shipment(
 
 @router.post("/")
 async def submit_shipment(
+    seller: SellerDep,
     shipment: ShipmentCreate,
     service: ShipmentServiceDep,
 ) -> Shipment:

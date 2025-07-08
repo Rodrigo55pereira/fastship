@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import security_settings
 from app.database.models import Seller
 from app.api.schemas.seller import SellerCreate
+from app.utils import generate_access_token
 
 password_context = CryptContext(schemes="bcrypt")
 
@@ -50,17 +51,13 @@ class SellerService:
                 detail="Email or password is incorrect",
             )
 
-        # Gerando Token
-        token = jwt.encode(
-            payload={
+        token = generate_access_token(
+            data={
                 "user": {
                     "name": seller.name,
-                    "email": seller.email,
-                },
-                "exp": datetime.now() + timedelta(days=1),
+                    "id": seller.id,
+                }
             },
-            algorithm=security_settings.JWT_ALGORITHM,
-            key=security_settings.JWT_SECRET,
         )
 
         return token
