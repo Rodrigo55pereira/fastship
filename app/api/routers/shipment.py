@@ -1,7 +1,9 @@
+from uuid import UUID
+
 from fastapi import APIRouter, HTTPException, status
 
 from app.api.dependencies import ShipmentServiceDep, SellerDep
-from app.api.schemas.shipment import ShipmentCreate, ShipmentUpdate
+from app.api.schemas.shipment import ShipmentCreate, ShipmentUpdate, ShipmentRead
 from app.database.models import Shipment
 
 router = APIRouter(
@@ -10,9 +12,9 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=Shipment)  # shipment = remessa
+@router.get("/", response_model=ShipmentRead)  # shipment = remessa
 async def get_shipment(
-    id: int,
+    id: UUID,
     _: SellerDep, # O valor _ indica que nao será utilizado no metodo.
     service: ShipmentServiceDep,
 ):
@@ -31,12 +33,12 @@ async def submit_shipment(
     shipment: ShipmentCreate,
     service: ShipmentServiceDep,
 ) -> Shipment:
-    return await service.add(shipment)
+    return await service.add(shipment, seller)
 
 
 @router.patch("/", response_model=Shipment)
 async def update_shipment(
-    id: int,
+    id: UUID,
     shipment_update: ShipmentUpdate,
     service: ShipmentServiceDep,
 ):

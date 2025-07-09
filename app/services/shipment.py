@@ -2,8 +2,9 @@ from datetime import datetime, timedelta
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.schemas.shipment import ShipmentCreate, ShipmentUpdate
+from app.api.schemas.shipment import ShipmentCreate
 from app.database.models import Shipment, ShipmentStatus
+from app.database.models import Seller
 
 
 class ShipmentService:
@@ -13,11 +14,14 @@ class ShipmentService:
     async def get(self, id: int) -> Shipment:
         return await self.session.get(Shipment, id)
 
-    async def add(self, shipment_create: ShipmentCreate) -> Shipment:
+    async def add(self, shipment_create: ShipmentCreate, seller: Seller) -> Shipment:
         new_shipment = Shipment(
             **shipment_create.model_dump(),
             status=ShipmentStatus.placed,
             estimated_delivery=datetime.now() + timedelta(days=3),
+            seller_id=seller.id,
+            # ou
+            # seller=seller,
         )
         self.session.add(new_shipment)
         await self.session.commit()
