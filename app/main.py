@@ -29,6 +29,6 @@ def get_scalar_docs(request: Request):
     # Monta a URL absoluta para o OpenAPI, baseada no host atual
     openapi_url = str(request.base_url) + "openapi.json"
     return get_scalar_api_reference(
-        openapi_url=openapi_url,
+        openapi_url=app.openapi_url,
         title="Scalar API",
     )
