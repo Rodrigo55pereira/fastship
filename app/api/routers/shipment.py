@@ -2,7 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, status
 
-from app.api.dependencies import ShipmentServiceDep, SellerDep
+from app.api.dependencies import ShipmentServiceDep, SellerDep, DeliveryPartnerDep
 from app.api.schemas.shipment import ShipmentCreate, ShipmentUpdate, ShipmentRead
 from app.database.models import Shipment
 
@@ -40,6 +40,7 @@ async def submit_shipment(
 async def update_shipment(
     id: UUID,
     shipment_update: ShipmentUpdate,
+    partner: DeliveryPartnerDep,
     service: ShipmentServiceDep,
 ):
     # converte em dicionario e tirar os nulos
@@ -56,7 +57,7 @@ async def update_shipment(
 
 @router.delete("/")
 async def delete_shipment(
-    id: int,
+    id: UUID,
     service: ShipmentServiceDep,
 ) -> dict[str, str]:
     await service.delete(id)

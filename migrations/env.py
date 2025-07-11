@@ -9,20 +9,18 @@ from alembic import context
 from sqlmodel import SQLModel
 
 from app.config import db_settings
+from app.database.models import Shipment, Seller, DeliveryPartner
 
-#Importacao das tabelas que serao controlados pelo Alembic
-from app.database.models import Shipment, Seller
+url_for_alembic = db_settings.POSTGRES_URL.replace("%", "%%")
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
-def get_alembic_url():
-    # Escapa todos os % para %% apenas para Alembic
-    return db_settings.POSTGRES_URL.replace('%', '%%')
-
-# Configuração passando a conexão do banco.
-config.set_main_option("sqlalchemy.url", get_alembic_url())
+config.set_main_option(
+    "sqlalchemy.url",
+    url_for_alembic,
+)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

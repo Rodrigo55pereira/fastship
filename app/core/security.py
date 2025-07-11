@@ -1,6 +1,7 @@
 from fastapi.security import OAuth2PasswordBearer
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/seller/login")
+oauth2_scheme_seller = OAuth2PasswordBearer(tokenUrl="/seller/login")
+oauth2_scheme_partner = OAuth2PasswordBearer(tokenUrl="/partner/login")
 
 # Recupera as credenciais faz a decodificacao.
 # class AccessTokenBearer(HTTPBearer):
