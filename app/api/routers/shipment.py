@@ -15,7 +15,7 @@ router = APIRouter(
 @router.get("/", response_model=ShipmentRead)  # shipment = remessa
 async def get_shipment(
     id: UUID,
-    _: SellerDep, # O valor _ indica que nao será utilizado no metodo.
+    _: SellerDep,  # O valor _ indica que nao será utilizado no metodo.
     service: ShipmentServiceDep,
 ):
     shipment = await service.get(id)
@@ -32,11 +32,11 @@ async def submit_shipment(
     seller: SellerDep,
     shipment: ShipmentCreate,
     service: ShipmentServiceDep,
-) -> Shipment:
+) -> ShipmentRead:
     return await service.add(shipment, seller)
 
 
-@router.patch("/", response_model=Shipment)
+@router.patch("/", response_model=ShipmentRead)
 async def update_shipment(
     id: UUID,
     shipment_update: ShipmentUpdate,
@@ -51,14 +51,18 @@ async def update_shipment(
             status_code=status.HTTP_400_BAD_REQUEST, detail="No data provided to update"
         )
 
-    shipment = await service.update(id, update)
-    return shipment
+    return await service.update(
+        id,
+        shipment_update,
+        partner,
+    )
 
 
-@router.delete("/")
-async def delete_shipment(
+### Cancel s shipment by id
+@router.get("/cancel", response_model=ShipmentRead)
+async def cancel_shipment(
     id: UUID,
+    seller: SellerDep,
     service: ShipmentServiceDep,
-) -> dict[str, str]:
-    await service.delete(id)
-    return {"detail": f"Shipment with id #{id} is deleted!"}
+):
+    return await service.cancel(id, seller)

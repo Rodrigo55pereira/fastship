@@ -13,6 +13,7 @@ class ShipmentStatus(str, Enum):
     in_transit = "in_transit"
     out_for_delivery = "out_for_delivery"
     delivered = "delivered"
+    cancelled = "cancelled"
 
 
 class Shipment(SQLModel, table=True):
@@ -36,11 +37,18 @@ class Shipment(SQLModel, table=True):
         )
     )
 
+    client_contact_email: EmailStr
+    client_contact_phone: int | None
+
     content: str
     weight: float = Field(le=25)
     destination: int
-    status: ShipmentStatus
     estimated_delivery: datetime
+
+    timeline: list["ShipmentEvent"] = Relationship(
+        back_populates="shipment",
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
 
     seller_id: UUID = Field(foreign_key="seller.id")
     """
@@ -62,6 +70,39 @@ class Shipment(SQLModel, table=True):
 
     delivery_partner: "DeliveryPartner" = Relationship(
         back_populates="shipments",
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
+
+    @property
+    def status(self):
+        return self.timeline[-1].status if len(self.timeline) > 0 else None
+
+
+class ShipmentEvent(SQLModel, table=True):
+    __tablename__ = "shipment_event"
+
+    id: UUID = Field(
+        sa_column=Column(
+            postgresql.UUID,
+            default=uuid4,
+            primary_key=True,
+        ),
+    )
+
+    created_at: datetime = Field(
+        sa_column=Column(
+            postgresql.TIMESTAMP,
+            default=datetime.now,
+        )
+    )
+
+    location: int
+    status: ShipmentStatus
+    description: str | None = Field(default=None)
+
+    shipment_id: UUID = Field(foreign_key="shipment.id")
+    shipment: Shipment = Relationship(
+        back_populates="timeline",
         sa_relationship_kwargs={"lazy": "selectin"},
     )
 
@@ -89,6 +130,9 @@ class Seller(User, table=True):
             default=datetime.now,
         )
     )
+
+    address: str | None = Field(default=None)
+    zip_code: int | None = Field(default=None)
 
     shipments: list[Shipment] = Relationship(
         back_populates="seller",
@@ -132,6 +176,7 @@ class DeliveryPartner(User, table=True):
             shipment
             for shipment in self.shipments
             if shipment.status != ShipmentStatus.delivered
+            or shipment.status != ShipmentStatus.cancelled
         ]
 
     @property
