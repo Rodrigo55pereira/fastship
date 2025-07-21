@@ -88,18 +88,21 @@ def get_shipment_service(
         DeliveryPartnerService(session),
         ShipmentEventService(
             session,
-            tasks, # type: ignore
+            tasks,  # type: ignore
         ),
     )
 
 
-def get_seller_service(session: SessionDep):
-    return SellerService(session)
+def get_seller_service(
+    session: SessionDep,
+    tasks: BackgroundTasks,
+):
+    return SellerService(session, tasks)
 
 
 # Delivery partner service dep
 def get_delivery_partner_service(session: SessionDep):
-    return DeliveryPartnerService(session)
+    return DeliveryPartnerService(session, tasks)
 
 
 ShipmentServiceDep = Annotated[

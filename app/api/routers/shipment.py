@@ -1,21 +1,24 @@
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Request
+from fastapi.templating import Jinja2Templates
 
 from app.api.dependencies import ShipmentServiceDep, SellerDep, DeliveryPartnerDep
-from app.api.schemas.shipment import ShipmentCreate, ShipmentUpdate, ShipmentRead
-from app.database.models import Shipment
+from app.api.schemas.shipment import ShipmentRead, ShipmentCreate, ShipmentUpdate
+from app.utils import TEMPLATE_DIR
 
 router = APIRouter(
     prefix="/shipment",
     tags=["Shipment"],
 )
 
+templates = Jinja2Templates(TEMPLATE_DIR)
+
 
 @router.get("/", response_model=ShipmentRead)  # shipment = remessa
 async def get_shipment(
     id: UUID,
-    _: SellerDep,  # O valor _ indica que nao será utilizado no metodo.
+    # _: SellerDep,  # O valor _ indica que nao será utilizado no metodo.
     service: ShipmentServiceDep,
 ):
     shipment = await service.get(id)
@@ -25,6 +28,28 @@ async def get_shipment(
             status_code=status.HTTP_404_NOT_FOUND, detail="Given id doesn't exist!!"
         )
     return shipment
+
+
+### Tracking details of shipment
+@router.get("/track")
+async def get_tracking(
+    request: Request,
+    id: UUID,
+    service: ShipmentServiceDep,
+):
+    shipment = await service.get(id)
+
+    context = shipment.model_dump()
+    context["status"] = shipment.status
+    context["partner"] = shipment.delivery_partner.name
+    context["timeline"] = shipment.timeline
+    context["timeline"].reverse()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="track.html",
+        context=context,
+    )
 
 
 @router.post("/")

@@ -8,6 +8,11 @@ _base_config = SettingsConfigDict(
 )
 
 
+class AppSettings(BaseSettings):
+    APP_NAME: str = "FastShip"
+    APP_DOMAIN: str = "localhost:8000"
+
+
 class DatabaseSettings(BaseSettings):
 
     # BaseSettings vai procurar esses valores dentro do arquivo .env
@@ -57,6 +62,7 @@ class NotificationSettings(BaseSettings):
     model_config = _base_config
 
 
+app_settings = AppSettings()
 db_settings = DatabaseSettings()  # type: ignore
 security_settings = SecuritySettings()  # type: ignore
 notification_settings = NotificationSettings()  # type: ignore
