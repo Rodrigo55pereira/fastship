@@ -7,16 +7,8 @@
     <list default="true" id="38ddccd4-c2d9-487c-bc8e-d27e4f3c000f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/dependencies.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/dependencies.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/routers/delivery_partner.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routers/delivery_partner.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/routers/seller.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routers/seller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/routers/shipment.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routers/shipment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/database/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/delivery_partner.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/delivery_partner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/seller.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/seller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/shipment_event.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/shipment_event.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/services/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/user.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/mail_placed.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/mail_placed.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

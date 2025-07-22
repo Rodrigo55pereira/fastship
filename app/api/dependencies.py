@@ -101,7 +101,10 @@ def get_seller_service(
 
 
 # Delivery partner service dep
-def get_delivery_partner_service(session: SessionDep):
+def get_delivery_partner_service(
+    session: SessionDep,
+    tasks: BackgroundTasks,
+):
     return DeliveryPartnerService(session, tasks)
 
 

@@ -1,3 +1,4 @@
+from datetime import timedelta
 from typing import Type
 from uuid import UUID
 
@@ -67,7 +68,7 @@ class UserService(BaseService):
         user = await self._get(UUID(token_data["id"]))
         user.email_verified = True
 
-        await self._update(user) # type: ignore
+        await self._update(user)  # type: ignore
 
     async def _get_by_email(self, email) -> User | None:
         # metodo scalar retorna apenas a primeira coluna
@@ -102,3 +103,41 @@ class UserService(BaseService):
                 }
             },
         )
+
+    async def send_password_reset_link(self, email, router_prefix):
+        user = await self._get_by_email(email)
+
+        token = generate_url_safe_token(
+            {
+                "id": str(user.id),
+            },
+            salt="password-reset",
+        )
+
+        await self.notification_service.send_email_with_template(
+            recipients=[user.email],
+            subject="FastShip Account Password Reset",
+            context={
+                "username": user.name,
+                "reset_url": f"http://{app_settings.APP_DOMAIN}{router_prefix}/reset_password_form?token={token}",
+            },
+            template_name="mail_password_reset.html",
+        )
+
+    async def reset_password(self, token: str, password: str) -> bool:
+        token_data = decode_url_safe_token(
+            token,
+            salt="password-reset",
+            expiry=timedelta(days=1),
+        )
+
+        if not token_data:
+            return False
+
+        user = await self._get(UUID(token_data["id"]))
+
+        user.password_hash = password_context.hash(password)
+
+        await self._update(user)
+
+        return True
