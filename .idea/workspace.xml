@@ -7,9 +7,14 @@
     <list default="true" id="38ddccd4-c2d9-487c-bc8e-d27e4f3c000f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/dependencies.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/dependencies.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/routers/seller.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/routers/seller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/user.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/schemas/shipment.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/schemas/shipment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/database/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/notification.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/notification.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/shipment.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/shipment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/services/shipment_event.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/shipment_event.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/mail_out_for_delivery.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/mail_out_for_delivery.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redis_conn.py" beforeDir="false" afterPath="$PROJECT_DIR$/redis_conn.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,12 +37,12 @@
     &quot;assignee&quot;: &quot;Rodrigo55pereira&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Rodrigo55pereira/fastship.git",
-    "accountId": "67e7af64-4d14-4d94-80c3-914f94b5687f"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Rodrigo55pereira/fastship.git&quot;,
+    &quot;accountId&quot;: &quot;67e7af64-4d14-4d94-80c3-914f94b5687f&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 6
@@ -50,17 +55,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/rpereira/Workspace/fastship",
-    "settings.editor.selected.configurable": "preferences.updates"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/rpereira/Workspace/fastship&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.updates&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

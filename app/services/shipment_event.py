@@ -1,6 +1,9 @@
+from random import randint
+
 from app.database.models import ShipmentEvent, Shipment, ShipmentStatus
 from app.services.base import BaseService
 from app.services.notification import NotificationService
+from redis_conn import add_shipment_verification_code
 
 
 class ShipmentEventService(BaseService):
@@ -77,6 +80,18 @@ class ShipmentEventService(BaseService):
             case ShipmentStatus.out_for_delivery:
                 subject = "Your Order is Arriving Soon 🛵"
                 template_name = "mail_out_for_delivery.html"
+
+                code = randint(100_000, 999_999)
+                await add_shipment_verification_code(shipment.id, code)
+
+                if shipment.client_contact_phone:
+                    await self.notification_service.send_sms(
+                        to=shipment.client_contact_phone,
+                        body=f"Your order is arriving soon! Share the {code} code with your"
+                        "delivery executive to receive your package."
+                    )
+                else:
+                    context["verification_code"] = code
 
             case ShipmentStatus.delivered:
                 subject = "Your Order is Delivered ✅"

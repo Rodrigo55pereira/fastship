@@ -10,6 +10,7 @@ from app.database.models import Shipment, ShipmentStatus
 from app.services.base import BaseService
 from app.services.delivery_partner import DeliveryPartnerService
 from app.services.shipment_event import ShipmentEventService
+from redis_conn import get_shipment_verification_code
 
 
 class ShipmentService(BaseService):
@@ -64,7 +65,22 @@ class ShipmentService(BaseService):
                 detail="Not authorized",
             )
 
-        update = shipment_update.model_dump(exclude_none=True)
+        if shipment_update.status == ShipmentStatus.delivered:
+            code = await get_shipment_verification_code(shipment.id)
+            print(type(code))
+            print("#"*100)
+            print(code != shipment_update.verification_code)
+            print(type(shipment_update.verification_code))
+            if code != shipment_update.verification_code:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Client not authorized",
+                )
+
+        update = shipment_update.model_dump(
+            exclude_none=True,
+            exclude=["verification_code"],
+        )
 
         if shipment_update.estimated_delivery:
             shipment.estimated_delivery = shipment_update.estimated_delivery
@@ -83,19 +99,15 @@ class ShipmentService(BaseService):
 
         if shipment.seller_id != seller.id:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Not Authorized"
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Not Authorized"
             )
 
         event = await self.event_service.add(
-            shipment=shipment,
-            status=ShipmentStatus.cancelled
+            shipment=shipment, status=ShipmentStatus.cancelled
         )
 
         shipment.timeline.append(event)
         return shipment
-
-
 
     async def delete(self, id: UUID) -> None:
         await self._delete(
