@@ -4,18 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38ddccd4-c2d9-487c-bc8e-d27e4f3c000f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/dependencies.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/dependencies.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/schemas/shipment.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/schemas/shipment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/database/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/database/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/notification.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/notification.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/shipment.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/shipment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/services/shipment_event.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/services/shipment_event.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/mail_out_for_delivery.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/mail_out_for_delivery.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/redis_conn.py" beforeDir="false" afterPath="$PROJECT_DIR$/redis_conn.py" afterDir="false" />
-    </list>
+    <list default="true" id="38ddccd4-c2d9-487c-bc8e-d27e4f3c000f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

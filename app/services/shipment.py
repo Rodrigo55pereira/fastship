@@ -4,12 +4,13 @@ from uuid import UUID
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.schemas.shipment import ShipmentCreate, ShipmentUpdate
-from app.database.models import Seller, DeliveryPartner
+from app.api.schemas.shipment import ShipmentCreate, ShipmentUpdate, ShipmentReview
+from app.database.models import Seller, DeliveryPartner, Review
 from app.database.models import Shipment, ShipmentStatus
 from app.services.base import BaseService
 from app.services.delivery_partner import DeliveryPartnerService
 from app.services.shipment_event import ShipmentEventService
+from app.utils import decode_url_safe_token
 from redis_conn import get_shipment_verification_code
 
 
@@ -67,10 +68,7 @@ class ShipmentService(BaseService):
 
         if shipment_update.status == ShipmentStatus.delivered:
             code = await get_shipment_verification_code(shipment.id)
-            print(type(code))
-            print("#"*100)
-            print(code != shipment_update.verification_code)
-            print(type(shipment_update.verification_code))
+
             if code != shipment_update.verification_code:
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -92,6 +90,25 @@ class ShipmentService(BaseService):
             )
 
         return await self._update(shipment)
+
+    async def rate(self, token: str, rating: int, comment: str):
+        token_data = decode_url_safe_token(token)
+
+        if not token_data:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized"
+            )
+
+        shipment = await self.get(UUID(token_data["id"]))
+
+        new_review = Review(
+            rating=rating,
+            comment=comment if comment else None,
+            shipment_id=shipment.id,
+        )
+
+        self.session.add(new_review)
+        await self.session.commit()
 
     async def cancel(self, id: UUID, seller: Seller) -> Shipment:
         # Validate the seller
